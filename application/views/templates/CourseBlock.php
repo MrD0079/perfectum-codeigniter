@@ -50,10 +50,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <tbody>
                     <?php foreach ($courses as $course): ?>
                         <tr>
-                            <td><?= $course->ccy ?></td>
-                            <td><?= $course->base_ccy ?></td>
-                            <td><?= number_format(round($course->buy,2),2,'.','') ?></td>
-                            <td><?= number_format(round($course->sale,2),2,'.',''); ?></td>
+                            <td><?= $course['ccy'] ?></td>
+                            <td><?= $course['base_ccy'] ?></td>
+                            <td><?= number_format(round($course['buy'],2),2,'.','') ?></td>
+                            <td><?= number_format(round($course['sale'],2),2,'.',''); ?></td>
                         </tr>
                     <?php endforeach;?>
                     </tbody>
