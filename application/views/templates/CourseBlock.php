@@ -15,7 +15,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <script>
                 $("#course-type").on("change",function(){
                     $.ajax({
-                        url : "<?php echo site_url('pages/getAjaxCourse')?>",
+                        url : "<?php echo base_url().'home/getAjaxCourse'?>",
                         type : "POST",
                         data : {'type':$(this).val()},
                         success : function(data) {
@@ -32,6 +32,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                             });
                         },
                         error : function(data) {
+                            console.log(data);
                             alert("Eror. Not load data from API/")
                         }
                     });

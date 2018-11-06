@@ -2,15 +2,65 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Course extends CI_Model{
-    function get_current_curse_db(){
-        $query = $this->db->get('course',1);
-        return $query->result_array();
+    function getCurseFromDB($perPage,$offset){
+        if($this->CheckExistTable("course")) {
+            $this->db->order_by('id', 'desc');
+            $query = $this->db->get('course', $perPage, $offset);
+            return $query->result_array();
+        }else{
+            return false;
+        }
     }
-    function get_all_curse_db($start=0,$limit = null){
-        $query = $this->db->get('course',1);
-        return $query->result_array();
+    function countRowsInTable($table){
+        return $this->db->count_all($table);
     }
-    function get_current_curse_api($url,array $courseTypes, $returnType = "all",array $currency, $saveInBD){
+    private function checkExistTable($table){
+        return $this->db->table_exists($table);
+    }
+    private function createTable($table = "course"){
+        if(!$this->checkExistTable($table)){
+            $fields = array(
+                'id' => array(
+                    'type' => 'INT',
+                    'constraint' => 11,
+                    'unsigned' => TRUE,
+                    'auto_increment' => TRUE
+                ),
+                'ccy' => array(
+                    'type' => 'VARCHAR',
+                    'constraint' => '100',
+                ),
+                'base_ccy' => array(
+                    'type' =>'VARCHAR',
+                    'constraint' => '100',
+                ),
+                'buy_cash' => array(
+                    'type' => 'FLOAT',
+                    'null' => TRUE,
+                ),
+                'buy_cashless' => array(
+                    'type' => 'FLOAT',
+                    'null' => TRUE,
+                ),
+                'sale_cash' => array(
+                    'type' => 'FLOAT',
+                    'null' => TRUE,
+                ),
+                'sale_cashless' => array(
+                    'type' => 'FLOAT',
+                    'null' => TRUE,
+                ),
+                'date' => array(
+                    'type' => 'datetime',
+                    'default' => 'CURRENT_TIMESTAMP',
+                ),
+            );
+            $this->dbforge->add_field($fields);
+            $attributes = array('ENGINE' => 'InnoDB','DEFAULT CHARSET'=>'utf8');
+            $this->dbforge->create_table($table, FALSE, $attributes);
+        }
+    }
+    function getCurrentCurseAPI($url,array $courseTypes, $returnType = "all",array $currency, $saveInBD){
         if(isset($url)){
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -25,7 +75,7 @@ class Course extends CI_Model{
                 $data = $this->getRequiredCurrency($result,$currency);
 
                 if($saveInBD){
-                    $this->save_new_curse($data,$type);
+                    $this->saveNewCurse($data);
                 }
                 if($returnType != "all")
                     return $this->getCurseByType($data,$returnType);
@@ -77,12 +127,8 @@ class Course extends CI_Model{
         }
         return $result;
     }
-    private function getLastIdSession(){
-        $query = $this->db->query("SELECT * FROM course");
-        $lastRow = $query->last_row();
-        return $lastRow->id_session;
-    }
-    private function save_new_curse($data){
-        $query = $this->db->insert_batch('course',$data);
+    private function saveNewCurse($data){
+        $this->createTable();
+        return $this->db->insert_batch('course',$data);
     }
 }

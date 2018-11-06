@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="link-block">
     <div class="container">
         <div class="col-12">
-            <a href="/history"><?=$this->lang->line('archive')?></a>
+            <a href="/history" class="btn btn-outline-primary" role="button"><?=$this->lang->line('archive')?></a>
         </div>
     </div>
 </div>
