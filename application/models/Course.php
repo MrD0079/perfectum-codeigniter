@@ -14,7 +14,6 @@ class Course extends CI_Model{
     function countRowsInTable($table){
         return $this->db->count_all($table);
     }
-<<<<<<< HEAD
     private function checkExistTable($table){
         return $this->db->table_exists($table);
     }
@@ -62,13 +61,6 @@ class Course extends CI_Model{
         }
     }
     function getCurrentCurseAPI($url,array $courseTypes, $returnType = "all",array $currency, $saveInBD){
-=======
-    function get_all_curse_db($start=0,$limit = null){
-        $query = $this->db->get('course',1);
-        return $query->result_array();
-    }
-    function get_current_curse_api($url,array $courseTypes, $returnType = "all",array $currency, $saveInBD){
->>>>>>> ac3a6cb30773bcb1d01f103feb85f5d1a587b3a0
         if(isset($url)){
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -83,11 +75,7 @@ class Course extends CI_Model{
                 $data = $this->getRequiredCurrency($result,$currency);
 
                 if($saveInBD){
-<<<<<<< HEAD
                     $this->saveNewCurse($data);
-=======
-                    $this->save_new_curse($data,$type);
->>>>>>> ac3a6cb30773bcb1d01f103feb85f5d1a587b3a0
                 }
                 if($returnType != "all")
                     return $this->getCurseByType($data,$returnType);
@@ -124,10 +112,10 @@ class Course extends CI_Model{
             $item['base_ccy'] = $currency['base_ccy'];
             $item['ccy'] = $ccy;
             foreach ($data['cash'] as $value) {
-                    if($value->ccy == $ccy){
-                        $item['buy_cash'] = $value->buy;
-                        $item['sale_cash'] = $value->sale;
-                    }
+                if($value->ccy == $ccy){
+                    $item['buy_cash'] = $value->buy;
+                    $item['sale_cash'] = $value->sale;
+                }
             }
             foreach ($data['cashless'] as $value) {
                 if($value->ccy == $ccy){
@@ -139,18 +127,8 @@ class Course extends CI_Model{
         }
         return $result;
     }
-<<<<<<< HEAD
     private function saveNewCurse($data){
         $this->createTable();
         return $this->db->insert_batch('course',$data);
-=======
-    private function getLastIdSession(){
-        $query = $this->db->query("SELECT * FROM course");
-        $lastRow = $query->last_row();
-        return $lastRow->id_session;
-    }
-    private function save_new_curse($data){
-        $query = $this->db->insert_batch('course',$data);
->>>>>>> ac3a6cb30773bcb1d01f103feb85f5d1a587b3a0
     }
 }

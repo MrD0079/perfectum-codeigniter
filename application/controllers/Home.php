@@ -96,7 +96,7 @@ class Home extends CI_Controller {
             $this->load->model('course');
             $url = 'https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=';
             return $this->course->
-                get_current_curse_api($url,$courseTypes,$type,$this->currency,$saveInBD);
+            getCurrentCurseAPI($url,$courseTypes,$type,$this->currency,$saveInBD);
         }
         return false;
     }
