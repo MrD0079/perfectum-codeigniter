@@ -19,11 +19,11 @@ class Course extends CI_Model{
     }
     private function createTable($table = "course"){
         if(!$this->checkExistTable($table)){
+            $this->load->dbforge();
             $fields = array(
                 'id' => array(
                     'type' => 'INT',
                     'constraint' => 11,
-                    'unsigned' => TRUE,
                     'auto_increment' => TRUE
                 ),
                 'ccy' => array(
@@ -36,26 +36,28 @@ class Course extends CI_Model{
                 ),
                 'buy_cash' => array(
                     'type' => 'FLOAT',
-                    'null' => TRUE,
+                    'default' => NULL,
                 ),
                 'buy_cashless' => array(
                     'type' => 'FLOAT',
-                    'null' => TRUE,
+                    'default' => NULL,
                 ),
                 'sale_cash' => array(
                     'type' => 'FLOAT',
-                    'null' => TRUE,
+                    'default' => NULL,
                 ),
                 'sale_cashless' => array(
                     'type' => 'FLOAT',
-                    'null' => TRUE,
+                    'default' => NULL,
                 ),
                 'date' => array(
                     'type' => 'datetime',
-                    'default' => 'CURRENT_TIMESTAMP',
+                    'default' => `CURRENT_TIMESTAMP`,
                 ),
             );
             $this->dbforge->add_field($fields);
+            //$this->dbforge->add_field('id');
+            $this->dbforge->add_key('id',TRUE);
             $attributes = array('ENGINE' => 'InnoDB','DEFAULT CHARSET'=>'utf8');
             $this->dbforge->create_table($table, FALSE, $attributes);
         }
@@ -128,7 +130,7 @@ class Course extends CI_Model{
         return $result;
     }
     private function saveNewCurse($data){
-        $this->createTable();
+        $this->createTable('course');
         return $this->db->insert_batch('course',$data);
     }
 }
